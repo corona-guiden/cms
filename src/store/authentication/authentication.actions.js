@@ -24,7 +24,6 @@ export default {
    */
   logout: ({ commit }) => {
     commit('setUser', null)
-    commit('products/setProducts', null, { root: true })
 
     const currentRouter = router.app.$route
     if (!(currentRouter.meta && currentRouter.meta.authNotRequired)) {

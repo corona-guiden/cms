@@ -56,7 +56,7 @@ export default class GenericDB {
 
     if (isNil(data)) return null
 
-    this.convertObjectTimestampPropertiesToDate(data)
+    // this.convertObjectTimestampPropertiesToDate(data)
     return { id, ...data }
   }
 
@@ -127,7 +127,7 @@ export default class GenericDB {
       .filter(prop => obj[prop] instanceof Object)
       .forEach(prop => {
         if (obj[prop] instanceof firebase.firestore.Timestamp) {
-          newObj[prop] = obj[prop].toDate()
+          newObj[prop] = obj[prop].seconds
         } else {
           this.convertObjectTimestampPropertiesToDate(obj[prop])
         }

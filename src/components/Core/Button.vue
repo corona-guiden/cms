@@ -1,4 +1,4 @@
-Base<template>
+<template>
   <button
     class="button"
     :class="buttonClasses"
@@ -126,7 +126,8 @@ export default {
 
 .button.is-small {
   border-radius: 3px;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
 }
 
 .button.is-large {

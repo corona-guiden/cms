@@ -14,8 +14,6 @@
     :value="computedValue"
     v-bind="$attrs"
     @input="onInput"
-    @blur="onBlur"
-    @focus="onFocus"
   />
 </template>
 

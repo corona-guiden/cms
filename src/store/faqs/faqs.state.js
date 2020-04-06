@@ -3,7 +3,8 @@ export default {
   faqToCreate: {
     status: 'active',
     question: '',
-    answer: ''
+    answer: '',
+    questionFormulations: []
   },
   faqDeletionPending: [],
   faqCreationPending: false

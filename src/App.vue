@@ -70,7 +70,8 @@ body {
       Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-size: 16px;
+    font-size: 18px;
+    line-height: 1.4;
     color: #2c3e50;
 
     display: flex;
@@ -103,8 +104,9 @@ body {
       flex: 1;
 
       .page-wrapper {
-        width: 60%;
-        margin: auto;
+        max-width: 1440px;
+        margin-left: auto;
+        margin-right: auto;
 
         @media screen and (max-width: 1000px) {
           width: 100%;
@@ -112,5 +114,19 @@ body {
       }
     }
   }
+}
+
+.container {
+  max-width: 960px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.primary-link {
+  color: #006bff;
+}
+
+.primary-link:hover {
+  color: #1a81ff;
 }
 </style>

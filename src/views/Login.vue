@@ -1,6 +1,6 @@
 <template>
   <div class="page-wrapper">
-    <h1 class="login-page-title">Login page</h1>
+<!--    <h1 class="login-page-title">Login</h1>-->
 
     <!-- Loader -->
     <div v-show="user === undefined" data-test="loader">Authenticating...</div>
@@ -10,16 +10,27 @@
       Please check your connection, login feature is not available offline.
     </div>
 
-    <p v-if="loginError">{{ loginError }}</p>
-    <!-- Auth UI -->
-    <div
-      v-show="user !== undefined && !user && networkOnLine"
-      data-test="login-btn"
-      class="login-btn"
-      @click="login"
-    >
-      Login with google
-    </div>
+    <form @submit.prevent="login">
+      <BaseField label="Email">
+        <BaseInput v-model="email" type="email" expanded />
+      </BaseField>
+
+      <BaseField label="Password">
+        <BaseInput v-model="password" type="password" expanded />
+      </BaseField>
+
+      <p v-if="loginError">{{ loginError }}</p>
+
+      <!-- Auth UI -->
+      <BaseButton
+        v-show="user !== undefined && !user && networkOnLine"
+        data-test="login-btn"
+        type="primary"
+        expanded
+      >
+        Login
+      </BaseButton>
+    </form>
   </div>
 </template>
 
@@ -27,10 +38,13 @@
 import { mapState, mapMutations } from 'vuex'
 import { isNil } from 'lodash'
 import firebase from 'firebase/app'
-import { desktop as isDekstop } from 'is_js'
+import BaseInput from '@/components/Core/Input.vue'
+import BaseField from "@/components/Core/Field.vue";
+import BaseButton from "@/components/Core/Button.vue";
 
 export default {
-  data: () => ({ loginError: null }),
+  components: {BaseButton, BaseField, BaseInput },
+  data: () => ({ loginError: null, email: '', password: '' }),
   head() {
     return {
       title: {
@@ -65,22 +79,33 @@ export default {
   methods: {
     ...mapMutations('authentication', ['setUser']),
     async login() {
-      this.loginError = null
-      const provider = new firebase.auth.GoogleAuthProvider()
-      this.setUser(undefined)
+      // this.loginError = null
+      // const provider = new firebase.auth.GoogleAuthProvider()
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(this.email, this.password)
+        .catch(function(error) {
+          // Handle Errors here.
+          // var errorCode = error.code;
+          // var errorMessage = error.message;
+          this.loginError = error.message
+          this.setUser(null)
+        })
 
-      try {
-        // Firebase signin with popup is faster than redirect
-        // but we can't use it on mobile because it's not well supported
-        // when app is running as standalone on ios & android
-        // eslint-disable-next-line no-unused-expressions
-        isDekstop()
-          ? await firebase.auth().signInWithPopup(provider)
-          : await firebase.auth().signInWithRedirect(provider)
-      } catch (err) {
-        this.loginError = err
-        this.setUser(null)
-      }
+      // this.setUser(undefined)
+
+      // try {
+      //   // Firebase signin with popup is faster than redirect
+      //   // but we can't use it on mobile because it's not well supported
+      //   // when app is running as standalone on ios & android
+      //   // eslint-disable-next-line no-unused-expressions
+      //   isDekstop()
+      //     ? await firebase.auth().signInWithPopup(provider)
+      //     : await firebase.auth().signInWithRedirect(provider)
+      // } catch (err) {
+      //   this.loginError = err
+      //   this.setUser(null)
+      // }
     }
   }
 }

@@ -4,31 +4,58 @@
     <p v-if="faqs && !faqs.length" class="infos-label">
       You don't have any faq yet
     </p>
-    <faq-item
-      v-for="(faq, index) in faqs"
-      :key="faq.id"
-      class="faq-row"
-      :index="index"
-      :is-faq-deletion-pending="isFaqDeletionPending(faq.id)"
-      :disable-actions="!networkOnLine"
-      :data="faq"
-      @deleteFaq="deleteUserFaq"
-    ></faq-item>
+    <vue-good-table
+      :columns="columns"
+      :rows="faqs || []"
+      @on-cell-click="onCellClick"
+      @on-row-click="() => {}"
+      :search-options="{
+        enabled: true,
+        skipDiacritics: true,
+        placeholder: 'Search for question or answer'
+      }"
+    />
   </div>
 </template>
 
 <script>
-import FaqItem from '@/components/FaqItem'
 import { mapState, mapActions, mapGetters } from 'vuex'
 
 export default {
-  components: { FaqItem },
+  data() {
+    return {
+      columns: [
+        {
+          label: 'Question',
+          field: 'question',
+          width: '280px'
+        },
+        {
+          label: 'Answer',
+          field: 'answer',
+        },
+        {
+          label: 'Created On',
+          field: 'createdAt',
+          type: 'date',
+          dateInputFormat: 't',
+          dateOutputFormat: 'yyyy-MM-dd kk:mm',
+          width: '160px'
+        }
+      ]
+    }
+  },
   computed: {
     ...mapGetters('faqs', ['isFaqDeletionPending']),
     ...mapState('faqs', ['faqs']),
     ...mapState('app', ['networkOnLine'])
   },
-  methods: mapActions('faqs', ['deleteUserFaq'])
+  methods: {
+    ...mapActions('faqs', ['deleteUserFaq']),
+    onCellClick(params) {
+      this.$router.push({ name: 'faq.edit', params: { id: params.row.id } })
+    },
+  }
 }
 </script>
 

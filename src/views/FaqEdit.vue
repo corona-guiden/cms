@@ -1,5 +1,5 @@
 <template>
-  <div class="faq-edit">
+  <div class="faq-edit container">
     <form v-if="currentFaq" class="faq-action-bar" @submit.prevent="updateFaq(currentFaq)">
       <h1>Edit FAQ</h1>
 
@@ -23,7 +23,7 @@
       <h4>Alternate question formulations</h4>
 
       <BaseField
-        v-for="(item, index) in currentFaq.formulations"
+        v-for="(item, index) in currentFaq.formulations || []"
         :key="item.id || index"
         style="display: flex;"
       >
@@ -41,7 +41,7 @@
       </BaseField>
 
       <BaseField>
-        <BaseButton @click="currentFaq.formulations.push({ question: '' })">
+        <BaseButton @click="addFormulation">
           Add formulation
         </BaseButton>
       </BaseField>
@@ -82,9 +82,13 @@ export default {
     }
   },
 
+  created() {
+    this.currentFaq = cloneDeep(this.getFaqById(this.$route.params.id))
+  },
+
   watch: {
-    storedFaq() {
-      this.currentFaq = cloneDeep(this.getFaqById(this.$route.params.id))
+    storedFaq(val) {
+      this.currentFaq = cloneDeep(val)
     }
   },
 
@@ -96,7 +100,14 @@ export default {
   },
 
   methods: {
-    ...mapActions('faqs', ['updateFaq'])
+    ...mapActions('faqs', ['updateFaq']),
+    addFormulation() {
+      if (typeof this.currentFaq.formulations === 'undefined') {
+        this.$set(this.currentFaq, 'formulations', [])
+      }
+
+      this.currentFaq.formulations.push({ question: '' })
+    }
   },
 }
 </script>

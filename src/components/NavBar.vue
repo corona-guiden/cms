@@ -25,12 +25,12 @@
         <div v-if="!networkOnLine" class="nav-item offline-label">Offline</div>
       </nav>
 
-      <img
-        v-if="isUserLoggedIn && networkOnLine"
-        class="user-picture can-hide"
-        :src="user.photoURL"
-        alt="Avatar"
-      />
+<!--      <img-->
+<!--        v-if="isUserLoggedIn && networkOnLine"-->
+<!--        class="user-picture can-hide"-->
+<!--        :src="user.photoURL"-->
+<!--        alt="Avatar"-->
+<!--      />-->
     </div>
   </header>
 </template>

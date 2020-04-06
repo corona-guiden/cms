@@ -32,8 +32,13 @@ export default {
   methods: {
     ...mapMutations('faqs', ['setFaqToCreate']),
     triggerFaqToCreate() {
-      this.setFaqToCreate(this.data)
-      this.data.suggestionId = this.data.id
+      const data = { ...this.data };
+      data.status = 'active'
+      data.suggestionId = data.id
+      this.$delete(data, 'id')
+
+      this.setFaqToCreate(data)
+
       this.$router.push({ name: 'faqs.create' })
     }
   },
@@ -51,6 +56,10 @@ export default {
 
   .suggestion-link {
     color: $vue-color;
+
+    &:last-child {
+      padding-left: 14px;
+    }
   }
 
   .delete-btn {

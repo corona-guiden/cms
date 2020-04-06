@@ -41,7 +41,7 @@ export default {
   props: {
     value: {
       type: [String, Number, Boolean, Object, Array, Function],
-      default: null
+      default: ''
     },
     placeholder: {
       type: [String, Number, Boolean],
@@ -115,7 +115,11 @@ export default {
   methods: {
     calculateWidth() {
       const { select } = this.$refs
-      this.dummyText = select.options[select.selectedIndex].text
+      const selectedOption = select.options[select.selectedIndex]
+
+      if (!selectedOption) return
+
+      this.dummyText = selectedOption.text
 
       this.$nextTick(() => {
         this.width = this.calculateMaxWidth(this.$refs.dummySelect.offsetWidth)

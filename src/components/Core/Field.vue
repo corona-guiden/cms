@@ -53,9 +53,9 @@ export default {
 }
 
 /* Field should only have one child, but if we have two, we'll put som margin on it. */
-.field > :first-child:not(:last-child) {
-  margin-bottom: 6px;
-}
+/*.field > :first-child:not(:last-child) {*/
+/*  margin-bottom: 6px;*/
+/*}*/
 
 /*.field.no-label:last-child {*/
 /*  margin-top: 1.8rem;*/

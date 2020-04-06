@@ -1,5 +1,6 @@
 import Vue from 'vue'
 
+import VueGoodTablePlugin from 'vue-good-table';
 import App from './App.vue'
 import router from './router'
 import store from './store'
@@ -9,6 +10,10 @@ import '@/firebase/init'
 import '@/firebase/authentication'
 import '@/misc/handle-apple-install-prompt'
 import 'pwacompat'
+
+import 'vue-good-table/dist/vue-good-table.css'
+
+Vue.use(VueGoodTablePlugin)
 
 require('./directives/autoheight.js')
 
