@@ -12,6 +12,13 @@ export default {
     state.faqs.splice(index, 1)
   },
 
+  updateFaq: (state, faq) => {
+    state.faqs = [
+      ...state.faqs.filter(f => f.id !== faq.id),
+      faq
+    ]
+  },
+
   /* Faqs deletion */
   addFaqDeletionPending: (state, faqId) => state.faqDeletionPending.push(faqId),
   removeFaqDeletionPending: (state, faqId) => {
@@ -20,5 +27,12 @@ export default {
   },
 
   /* Faq creation */
-  setFaqCreationPending: (state, value) => (state.faqCreationPending = value)
+  setFaqCreationPending: (state, value) => (state.faqCreationPending = value),
+
+  /* Faq updating */
+  addFaqUpdatingPending: (state, value) => (state.faqUpdatingPending.push(value)),
+  removeFaqUpdatingPending: (state, faqId) => {
+    const index = state.faqs.findIndex(faq => faq.id === faqId)
+    state.faqUpdatingPending.splice(index, 1)
+  },
 }

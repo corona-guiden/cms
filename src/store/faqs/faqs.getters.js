@@ -7,6 +7,9 @@ export default {
   isFaqDeletionPending: state => faqId =>
     state.faqDeletionPending.includes(faqId),
 
+  isFaqUpdating: state => faqId =>
+      state.faqUpdatingPending.includes(faqId),
+
   /**
    * Get faq by id
    */

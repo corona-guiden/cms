@@ -6,13 +6,17 @@
     </p>
     <vue-good-table
       :columns="columns"
-      :rows="suggestions"
+      :rows="suggestions || []"
       @on-cell-click="onCellClick"
       @on-row-click="() => {}"
     >
       <template slot="table-row" slot-scope="props">
         <span v-if="props.column.field === 'actions'">
-          <a class="primary-link" role="button" @click.prevent="triggerFaqToCreate(props.row)">
+          <a
+            class="primary-link"
+            role="button"
+            @click.prevent="triggerFaqToCreate(props.row)"
+          >
             Create FAQ
           </a>
         </span>
@@ -25,7 +29,7 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex'
+import { mapActions, mapMutations, mapState } from 'vuex'
 import { cloneDeep } from 'lodash'
 
 export default {
@@ -50,12 +54,24 @@ export default {
           tdClass: this.tdClassFunc,
           filterOptions: {
             enabled: true,
-            filterDropdownItems: ['New', 'Active']
+            filterDropdownItems: [
+              { value: 'updated', text: 'Updated' },
+              { value: 'new', text: 'New' },
+              { value: 'approved', text: 'Approved' }
+            ]
           }
         },
         {
           label: 'Created On',
           field: 'createdAt',
+          type: 'date',
+          dateInputFormat: 't',
+          dateOutputFormat: 'yyyy-MM-dd kk:mm',
+          width: '160px'
+        },
+        {
+          label: 'Source updated',
+          field: 'sourceUpdatedAt',
           type: 'date',
           dateInputFormat: 't',
           dateOutputFormat: 'yyyy-MM-dd kk:mm',
@@ -74,6 +90,7 @@ export default {
   },
   methods: {
     ...mapMutations('faqs', ['setFaqToCreate']),
+    ...mapActions('suggestions', ['setSuggestionToApproved']),
     tdClassFunc(row) {
       return `status-${row.status.toLowerCase()}`
     },
@@ -89,7 +106,9 @@ export default {
 
       data.status = 'active'
       data.suggestionId = data.id
+      data.createdAt = Math.round(new Date().getTime() / 1000)
 
+      this.setSuggestionToApproved(row)
       this.$delete(data, 'id')
       this.setFaqToCreate(data)
       this.$router.push({ name: 'faqs.create' })
@@ -113,7 +132,16 @@ export default {
   justify-content: space-between;
 }
 
-.vgt-wrap >>> .status-new {
+.vgt-wrap >>> [class*='status-'] {
+  text-transform: capitalize;
+  font-weight: 500;
+}
+
+.vgt-wrap >>> .status-approved {
   color: green;
+}
+
+.vgt-wrap >>> .status-updated {
+  color: orangered;
 }
 </style>

@@ -7,13 +7,17 @@
     <vue-good-table
       :columns="columns"
       :rows="faqs || []"
-      @on-cell-click="onCellClick"
-      @on-row-click="() => {}"
+      :sort-options="{
+        enabled: true,
+        initialSortBy: { field: 'createdAt', type: 'desc' }
+      }"
       :search-options="{
         enabled: true,
         skipDiacritics: true,
         placeholder: 'Search for question or answer'
       }"
+      @on-cell-click="onCellClick"
+      @on-row-click="() => {}"
     />
   </div>
 </template>
@@ -32,7 +36,16 @@ export default {
         },
         {
           label: 'Answer',
-          field: 'answer',
+          field: 'answer'
+        },
+        {
+          label: 'Formulations',
+          field: 'formulations',
+          tdClass: row => `formulations-${row.formulations.length}`,
+          type: 'number',
+          formatFn: (value = []) => {
+            return value.length
+          }
         },
         {
           label: 'Created On',
@@ -54,7 +67,7 @@ export default {
     ...mapActions('faqs', ['deleteUserFaq']),
     onCellClick(params) {
       this.$router.push({ name: 'faq.edit', params: { id: params.row.id } })
-    },
+    }
   }
 }
 </script>
@@ -73,5 +86,13 @@ export default {
   max-width: 500px;
   margin: 10px auto;
   justify-content: space-between;
+}
+
+.vgt-wrap >>> {
+  .formulations-0,
+  .formulations-1 {
+    color: orangered;
+    font-weight: 700;
+  }
 }
 </style>

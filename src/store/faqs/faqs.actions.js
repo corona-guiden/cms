@@ -24,10 +24,14 @@ export default {
     return createdFaq
   },
 
-  updateFaq: async (foo, faq) => {
+  updateFaq: async ({ commit }, faq) => {
     const faqsDb = new FaqsDB()
 
+    commit('addFaqUpdatingPending', faq.id)
     const updatedFaq = await faqsDb.update(faq)
+    commit('updateFaq', faq)
+    commit('removeFaqUpdatingPending', faq.id)
+
     return updatedFaq
   },
 

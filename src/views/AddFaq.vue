@@ -21,14 +21,14 @@
         <BaseInput
           placeholder=""
           :value="faqToCreate.question"
-          @input="setFaqToCreate({ question: $event.target.value })"
+          @input="setFaqToCreate({ question: $event })"
         />
       </BaseField>
 
       <h4>Alternate question formulations</h4>
 
       <BaseField
-        v-for="(item, index) in questionFormulations"
+        v-for="(item, index) in faqToCreate.formulations"
         :key="item.id || index"
         style="display: flex;"
       >
@@ -39,15 +39,29 @@
 
         <BaseButton
           type="danger"
-          @click.prevent="questionFormulations.splice(questionFormulations.indexOf(item), 1)"
+          @click.prevent="
+            faqToCreate.formulations.splice(
+              faqToCreate.formulations.indexOf(item),
+              1
+            )
+          "
         >
           x
         </BaseButton>
       </BaseField>
 
       <BaseField>
-        <BaseButton @click.prevent="questionFormulations.push({ question: '' })">
+        <BaseButton
+          @click.prevent="faqToCreate.formulations.push({ question: '' })"
+        >
           Add formulation
+        </BaseButton>
+
+        <BaseButton
+          style="margin-left: 20px;"
+          @click.prevent="faqToCreate.formulations.push({ question: faqToCreate.question })"
+        >
+          Add formulation from question
         </BaseButton>
       </BaseField>
 
@@ -57,16 +71,12 @@
           placeholder=""
           :rows="4"
           :value="faqToCreate.answer"
-          @input="setFaqToCreate({ answer: $event.target.value })"
+          @input="setFaqToCreate({ answer: $event })"
         />
       </BaseField>
 
       <BaseField>
-        <BaseButton
-          expanded
-          type="primary"
-          :disabled="faqCreationPending"
-        >
+        <BaseButton expanded type="primary" :disabled="faqCreationPending">
           Create FAQ
         </BaseButton>
       </BaseField>
@@ -81,7 +91,6 @@ import BaseSelect from '../components/Core/Select.vue'
 import BaseField from '../components/Core/Field.vue'
 import BaseTextarea from '../components/Core/Textarea.vue'
 import BaseInput from '../components/Core/Input.vue'
-import FaqQuestionFormulationsDB from '../firebase/faqQuestionFormulations-db'
 
 export default {
   components: { BaseInput, BaseTextarea, BaseField, BaseSelect, BaseButton },
@@ -95,17 +104,17 @@ export default {
     ...mapMutations('faqs', ['setFaqToCreate']),
     ...mapActions('faqs', ['triggerAddFaqAction']),
     async create() {
-      const res = await this.triggerAddFaqAction()
+      await this.triggerAddFaqAction()
 
-      this.questionFormulations.forEach(formulation => {
-        new FaqQuestionFormulationsDB().create({
-          faqId: res.id,
-          ...formulation
-        })
-      })
+      // this.questionFormulations.forEach(formulation => {
+      //   new FaqQuestionFormulationsDB().create({
+      //     faqId: res.id,
+      //     ...formulation
+      //   })
+      // })
 
       await this.$router.push({ name: 'faqs' })
-    },
+    }
   }
 }
 </script>
