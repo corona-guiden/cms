@@ -38,11 +38,9 @@ export default {
   /**
    * Create a new faq and reset faq object
    */
-  triggerAddFaqAction: async ({ dispatch, state, commit }) => {
-    if (state.faqToCreate === {}) return
+  triggerAddFaqAction: async ({ dispatch }, faq) => {
+    if (faq === {}) return
 
-    const faq = state.faqToCreate
-    commit('setFaqToCreate', {})
     // eslint-disable-next-line consistent-return
     return dispatch('createFaq', faq)
   },

@@ -8,9 +8,8 @@
           :transparent="false"
           :expanded="true"
           :border="true"
-          :value="faqToCreate.status"
+          v-model="faq.status"
           required
-          @input="setFaqToCreate({ status: $event.target.value })"
         >
           <option value="active">Active</option>
           <option value="inactive">Inactive</option>
@@ -20,28 +19,28 @@
       <BaseField label="Question">
         <BaseInput
           placeholder=""
-          :value="faqToCreate.question"
-          @input="setFaqToCreate({ question: $event })"
+          v-model="faq.question"
         />
       </BaseField>
 
       <h4>Alternate question formulations</h4>
 
       <BaseField
-        v-for="(item, index) in faqToCreate.formulations"
+        v-for="(item, index) in faq.formulations"
         :key="item.id || index"
         style="display: flex;"
       >
         <BaseInput
           v-model="item.formulation"
+          :ref="`formulation-${index}`"
           :placeholder="'Formulation ' + (index + 1)"
         />
 
         <BaseButton
           type="danger"
           @click.prevent="
-            faqToCreate.formulations.splice(
-              faqToCreate.formulations.indexOf(item),
+            faq.formulations.splice(
+              faq.formulations.indexOf(item),
               1
             )
           "
@@ -51,17 +50,8 @@
       </BaseField>
 
       <BaseField>
-        <BaseButton
-          @click.prevent="faqToCreate.formulations.push({ question: '' })"
-        >
+        <BaseButton @click.prevent="addFormulation">
           Add formulation
-        </BaseButton>
-
-        <BaseButton
-          style="margin-left: 20px;"
-          @click.prevent="faqToCreate.formulations.push({ question: faqToCreate.question })"
-        >
-          Add formulation from question
         </BaseButton>
       </BaseField>
 
@@ -70,8 +60,7 @@
           v-autoheight
           placeholder=""
           :rows="4"
-          :value="faqToCreate.answer"
-          @input="setFaqToCreate({ answer: $event })"
+          v-model="faq.answer"
         />
       </BaseField>
 
@@ -86,6 +75,7 @@
 
 <script>
 import { mapMutations, mapState, mapActions } from 'vuex'
+import { cloneDeep } from 'lodash'
 import BaseButton from '../components/Core/Button.vue'
 import BaseSelect from '../components/Core/Select.vue'
 import BaseField from '../components/Core/Field.vue'
@@ -96,24 +86,38 @@ export default {
   components: { BaseInput, BaseTextarea, BaseField, BaseSelect, BaseButton },
   data() {
     return {
-      questionFormulations: []
+      faq: null
     }
   },
   computed: mapState('faqs', ['faqToCreate', 'faqCreationPending']),
+  created() {
+    this.faq = cloneDeep(this.faqToCreate)
+  },
   methods: {
     ...mapMutations('faqs', ['setFaqToCreate']),
     ...mapActions('faqs', ['triggerAddFaqAction']),
     async create() {
-      await this.triggerAddFaqAction()
-
-      // this.questionFormulations.forEach(formulation => {
-      //   new FaqQuestionFormulationsDB().create({
-      //     faqId: res.id,
-      //     ...formulation
-      //   })
-      // })
+      this.faq.createdAt = Math.round(Date.now() / 1000)
+      await this.triggerAddFaqAction(this.faq)
 
       await this.$router.push({ name: 'faqs' })
+    },
+    addFormulation() {
+      if (typeof this.faq.formulations === 'undefined') {
+        this.$set(this.faq, 'formulations', [])
+      }
+
+      const formulationIndex = this.faq.formulations.push({
+        formulation: this.faq.question
+      })
+
+      this.$nextTick(() => {
+        const $refElement = this.$refs[`formulation-${formulationIndex - 1}`][0]
+        if (!$refElement) return
+        const formulation = $refElement.$el
+        formulation.focus()
+        formulation.select()
+      })
     }
   }
 }

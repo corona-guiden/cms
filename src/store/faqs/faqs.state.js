@@ -4,8 +4,7 @@ export default {
     status: 'active',
     question: '',
     answer: '',
-    formulations: [],
-    createdAt: ''
+    formulations: []
   },
   faqDeletionPending: [],
   faqUpdatingPending: [],
