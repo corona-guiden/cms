@@ -1,25 +1,32 @@
 <template>
-  <input
-    ref="input"
-    class="input"
-    :class="{
-      'is-loading': loading,
-      'has-error': hasError,
-      'has-border': $attrs.hasOwnProperty('border'),
-      'is-large': $attrs.hasOwnProperty('large'),
-      'is-narrow': isNarrow,
-      transparent: $attrs.hasOwnProperty('transparent')
-    }"
-    :type="$attrs.type || 'text'"
-    :value="computedValue"
-    v-bind="$attrs"
-    @input="onInput"
-  />
+  <div class="input-wrapper" :class="{ 'has-tts': tts }">
+    <input
+      ref="input"
+      class="input"
+      :class="{
+        'is-loading': loading,
+        'has-error': hasError,
+        'has-border': $attrs.hasOwnProperty('border'),
+        'is-large': $attrs.hasOwnProperty('large'),
+        'is-narrow': isNarrow,
+        transparent: $attrs.hasOwnProperty('transparent')
+      }"
+      :type="$attrs.type || 'text'"
+      :value="computedValue"
+      v-bind="$attrs"
+      @input="onInput"
+    />
+
+    <ssml v-if="tts" :text="computedValue" class="input-tts"></ssml>
+  </div>
 </template>
 
 <script>
+import Ssml from '../Ssml.vue'
+
 export default {
   name: 'BaseInput',
+  components: { Ssml },
   inheritAttrs: false,
   props: {
     value: {
@@ -27,7 +34,11 @@ export default {
       default: ''
     },
     loading: Boolean,
-    isNarrow: Boolean
+    isNarrow: Boolean,
+    tts: {
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     return {
@@ -72,6 +83,11 @@ export default {
 </script>
 
 <style scoped>
+.input-wrapper {
+  width: 100%;
+  position: relative;
+}
+
 .input {
   align-items: center;
   border: 1px solid transparent;
@@ -141,5 +157,21 @@ export default {
   padding: 0 5px;
   height: auto;
   text-align: right;
+}
+
+.has-tts .input {
+  padding-right: 40px;
+}
+
+.input-tts {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.input-tts >>> svg {
+  display: block;
 }
 </style>

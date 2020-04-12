@@ -1,23 +1,31 @@
 <template>
-  <textarea
-    class="input"
-    :class="{
-      'is-loading': loading,
-      'has-error': hasError,
-      'full-width': expanded,
-      transparent: $attrs.hasOwnProperty('transparent')
-    }"
-    :type="$attrs.type || 'text'"
-    :value="value"
-    v-bind="$attrs"
-    rows="1"
-    v-on="listeners"
-  />
+  <div class="input-wrapper" :class="{ 'has-tts': tts }">
+    <textarea
+      v-autoheight
+      class="input"
+      :class="{
+        'is-loading': loading,
+        'has-error': hasError,
+        'full-width': expanded,
+        transparent: $attrs.hasOwnProperty('transparent')
+      }"
+      :type="$attrs.type || 'text'"
+      :value="value"
+      v-bind="$attrs"
+      rows="1"
+      v-on="listeners"
+    />
+
+    <ssml v-if="tts" :text="value" class="input-tts"></ssml>
+  </div>
 </template>
 
 <script>
+import Ssml from '../Ssml'
+
 export default {
   name: 'BaseTextarea',
+  components: { Ssml },
   inheritAttrs: false,
   props: {
     value: {
@@ -25,7 +33,11 @@ export default {
       default: ''
     },
     loading: Boolean,
-    expanded: Boolean
+    expanded: Boolean,
+    tts: {
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     return {
@@ -52,6 +64,11 @@ export default {
 </script>
 
 <style scoped>
+.input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
 textarea {
   max-width: 100%;
   min-width: 100%;
@@ -68,7 +85,23 @@ textarea {
   position: relative;
 }
 
-textarea:placeholder {
+textarea::placeholder {
   color: var(--gray-600);
+}
+
+.has-tts textarea {
+  padding-right: 40px;
+}
+
+.input-tts {
+  position: absolute;
+  right: 10px;
+  top: 30px;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.input-tts >>> svg {
+  display: block;
 }
 </style>

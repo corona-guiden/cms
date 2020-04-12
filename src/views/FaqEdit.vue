@@ -1,10 +1,6 @@
 <template>
   <div class="faq-edit container">
-    <form
-      v-if="currentFaq"
-      class="faq-action-bar"
-      @submit.prevent="update"
-    >
+    <form v-if="currentFaq" class="faq-action-bar" @submit.prevent="update">
       <h1>Edit FAQ</h1>
 
       <BaseField label="Status">
@@ -21,7 +17,7 @@
       </BaseField>
 
       <BaseField label="Question">
-        <BaseInput v-model="currentFaq.question" placeholder="" />
+        <BaseInput v-model="currentFaq.question" placeholder="" :tts="true" />
       </BaseField>
 
       <h4>Alternate question formulations</h4>
@@ -59,14 +55,18 @@
       <BaseField label="Answer">
         <BaseTextarea
           v-model="currentFaq.answer"
-          v-autoheight
           placeholder=""
           :rows="4"
+          :tts="true"
         />
       </BaseField>
 
       <BaseField>
-        <BaseButton expanded type="primary" :is-loading="isFaqUpdating(currentFaq.id)">
+        <BaseButton
+          expanded
+          type="primary"
+          :is-loading="isFaqUpdating(currentFaq.id)"
+        >
           Save
         </BaseButton>
       </BaseField>
@@ -84,7 +84,13 @@ import BaseTextarea from '@/components/Core/Textarea.vue'
 import { cloneDeep } from 'lodash'
 
 export default {
-  components: { BaseTextarea, BaseButton, BaseInput, BaseField, BaseSelect },
+  components: {
+    BaseTextarea,
+    BaseButton,
+    BaseInput,
+    BaseField,
+    BaseSelect
+  },
 
   data() {
     return {

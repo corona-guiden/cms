@@ -19,6 +19,7 @@
       <BaseField label="Question">
         <BaseInput
           placeholder=""
+          tts
           v-model="faq.question"
         />
       </BaseField>
@@ -57,10 +58,10 @@
 
       <BaseField label="Answer">
         <BaseTextarea
-          v-autoheight
           placeholder=""
           :rows="4"
           v-model="faq.answer"
+          tts
         />
       </BaseField>
 

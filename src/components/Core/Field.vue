@@ -73,8 +73,7 @@ export default {
   display: flex;
   align-items: center;
   position: relative;
-  color: var(--navy-700);
-  font-weight: 500;
+  font-weight: 600;
   font-size: 16px;
   white-space: nowrap;
   line-height: 1;
@@ -86,7 +85,6 @@ export default {
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 1.5px;
-  /*margin-bottom: 16px;*/
 }
 
 .inset > .label {
