@@ -27,7 +27,7 @@ export default {
           <v-card-subtitle>
             {{ suggestion.source_updated_at }} – {{ suggestion.source.toUpperCase() }}
           </v-card-subtitle>
-          <v-card-text v-html="suggestion.answer" />
+          <v-card-text v-text="suggestion.answer" />
         </v-card>
       </v-col>
     </v-row>

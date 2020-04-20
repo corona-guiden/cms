@@ -137,12 +137,6 @@
         return title ? `${title} | ${appConfig.title}` : appConfig.title
       },
     },
-    computed: {
-      ...authComputed,
-    },
-    methods: {
-      ...authMethods,
-    },
     data: () => ({
       drawer: null,
       items: [
@@ -151,6 +145,12 @@
         { icon: 'mdi-help-network', text: 'QNA\'s', to: {name: 'qnas'} }
       ],
     }),
+    computed: {
+      ...authComputed,
+    },
+    methods: {
+      ...authMethods,
+    },
   }
 </script>
 
