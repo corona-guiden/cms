@@ -142,7 +142,8 @@
       items: [
         { icon: 'mdi-home', text: 'Home', to: {name: 'home'} },
         { icon: 'mdi-archive-arrow-down', text: 'Suggestions', to: {name: 'suggestions'} },
-        { icon: 'mdi-help-network', text: 'QNA\'s', to: {name: 'qnas'} }
+        { icon: 'mdi-help-network', text: 'QNA\'s', to: {name: 'qnas'} },
+        { icon: 'mdi-web-clock', text: 'Website Monitors', to: {name: 'website-monitors'} },
       ],
     }),
     computed: {

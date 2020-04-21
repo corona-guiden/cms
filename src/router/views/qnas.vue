@@ -5,14 +5,14 @@
     data() {
       return {
         search: '',
-        loading: true,
+        loading: false,
         filters: {
-          status: ['new', 'updated']
+          status: []
         },
         options: {
           itemsPerPage: -1,
         },
-        suggestions: [],
+        qnas: [],
         headers: [
           {text: 'Status', value: 'status', width: 100},
           {
@@ -20,15 +20,14 @@
             align: 'start',
             value: 'question',
           },
-          // { text: 'Answer', value: 'answer' },
           { text: 'Updated', value: 'source_updated_at', align: 'end', width: 170 },
           { text: 'Actions', value: 'actions', sortable: false, align: 'end', width: 180 },
         ],
       }
     },
     computed: {
-      filteredSuggestions() {
-        return this.suggestions.filter(d => {
+      filteredQnas() {
+        return this.qnas.filter(d => {
           return Object.keys(this.filters).every(f => {
             return this.filters[f].length < 1 || this.filters[f].includes(d[f])
           })
@@ -36,9 +35,9 @@
       }
     },
     created() {
-      this.getDataFromApi().then(data => {
-        this.suggestions = data
-      })
+      // this.getDataFromApi().then(data => {
+      //   this.qnas = data
+      // })
     },
     methods: {
       getStatusColor(status) {
@@ -48,7 +47,7 @@
       },
       async getDataFromApi() {
         this.loading = true
-        const res = await http.get('/api/suggestions')
+        const res = await http.get('/api/qnas')
         this.loading = false
 
         return res.data
@@ -56,7 +55,7 @@
     },
     page() {
       return {
-        title: 'Suggestions',
+        title: 'QNA\'s',
       }
     },
   }
@@ -66,7 +65,7 @@
     <div>
         <v-card :elevation="4" :loading="loading">
             <v-card-title>
-                Suggestions
+                QNA's
 
                 <v-spacer/>
 
@@ -97,7 +96,7 @@
 
             <v-data-table
                     :headers="headers"
-                    :items="filteredSuggestions"
+                    :items="filteredQnas"
                     :options.sync="options"
                     :multi-sort="false"
                     :search="search"

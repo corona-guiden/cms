@@ -27,47 +27,6 @@ export default [
     },
   },
   {
-    path: '/profile',
-    name: 'profile',
-    component: () => lazyLoadView(import('@views/profile.vue')),
-    meta: {
-      authRequired: true,
-    },
-    props: (route) => ({ user: store.state.auth.currentUser || {} }),
-  },
-  {
-    path: '/profile/:username',
-    name: 'username-profile',
-    component: () => lazyLoadView(import('@views/profile.vue')),
-    meta: {
-      authRequired: true,
-      // HACK: In order to share data between the `beforeResolve` hook
-      // and the `props` function, we must create an object for temporary
-      // data only used during route resolution.
-      tmp: {},
-      beforeResolve(routeTo, routeFrom, next) {
-        store
-          // Try to fetch the user's information by their username
-          .dispatch('users/fetchUser', { username: routeTo.params.username })
-          .then((user) => {
-            // Add the user to `meta.tmp`, so that it can
-            // be provided as a prop.
-            routeTo.meta.tmp.user = user
-            // Continue to the route.
-            next()
-          })
-          .catch(() => {
-            // If a user with the provided username could not be
-            // found, redirect to the 404 page.
-            next({ name: '404', params: { resource: 'User' } })
-          })
-      },
-    },
-    // Set the user from the route params, once it's set in the
-    // beforeResolve route guard.
-    props: (route) => ({ user: route.meta.tmp.user }),
-  },
-  {
     path: '/logout',
     name: 'logout',
     meta: {
@@ -83,14 +42,6 @@ export default [
     },
   },
   {
-    path: '/404',
-    name: '404',
-    component: require('@views/_404.vue').default,
-    // Allows props to be passed to the 404 page through route
-    // params, such as `resource` to define what wasn't found.
-    props: true,
-  },
-  {
     path: '/suggestions',
     name: 'suggestions',
     component: () => lazyLoadView(import('@views/suggestions.vue')),
@@ -98,6 +49,14 @@ export default [
       authRequired: true,
     },
     props: (route) => ({ suggestions: store.state.suggestions || {} }),
+  },
+  {
+    path: '/website-monitors',
+    name: 'website-monitors',
+    component: () => lazyLoadView(import('@views/website-monitors.vue')),
+    meta: {
+      authRequired: true,
+    },
   },
   {
     path: '/suggestions/:id',
@@ -108,7 +67,6 @@ export default [
       tmp: {},
       beforeResolve(routeTo, routeFrom, next) {
         store.dispatch('suggestions/fetchSuggestion', { id: routeTo.params.id }).then(res => {
-          console.log(res)
           routeTo.meta.tmp.suggestion = res
           next()
         })
@@ -119,6 +77,18 @@ export default [
   {
     path: '/qnas',
     name: 'qnas',
+    component: () => lazyLoadView(import('@views/qnas.vue')),
+    meta: {
+      authRequired: true,
+    }
+  },
+  {
+    path: '/404',
+    name: '404',
+    component: require('@views/_404.vue').default,
+    // Allows props to be passed to the 404 page through route
+    // params, such as `resource` to define what wasn't found.
+    props: true,
   },
   // Redirect any unmatched routes to the 404 page. This may
   // require some server configuration to work in production:

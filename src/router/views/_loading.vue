@@ -1,21 +1,16 @@
 <script>
-import Layout from '@layouts/main.vue'
-
 export default {
   page: {
     title: 'Loading page...',
     meta: [{ name: 'description', content: 'Loading page...' }],
   },
-  components: { Layout },
 }
 </script>
 
 <template>
-  <Layout>
     <Transition appear>
-      <BaseIcon :class="$style.loadingIcon" name="sync" spin />
+      <v-icon name="sync" />
     </Transition>
-  </Layout>
 </template>
 
 <style lang="scss" module>
