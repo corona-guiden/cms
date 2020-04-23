@@ -9,9 +9,6 @@
         filters: {
           status: ['new', 'updated']
         },
-        options: {
-          itemsPerPage: -1,
-        },
         suggestions: [],
         headers: [
           {text: 'Status', value: 'status', width: 100},
@@ -98,8 +95,10 @@
             <v-data-table
                     :headers="headers"
                     :items="filteredSuggestions"
-                    :options.sync="options"
+                    :items-per-page="-1"
                     :multi-sort="false"
+                    sort-by="status"
+                    :sort-desc="true"
                     :search="search"
                     @click:row.self="$router.push({ name: 'suggestion', params: { id: $event.id } })"
             >
