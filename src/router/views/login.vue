@@ -9,8 +9,8 @@ export default {
   },
   data() {
     return {
-      email: 'hej@robin.se',
-      password: 'secret',
+      email: '',
+      password: '',
       authError: null,
       tryingToLogIn: false,
     }
